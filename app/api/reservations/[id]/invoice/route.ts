@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs';
 import { PrismaClient, Prisma } from '@prisma/client'
 import type { reservation } from "@prisma/client";
-import { GetByIdAsync } from "@/app/api/reservations/route";
 import { InternalDate } from "@/app/lib/dateutils";
 import { currency } from "@/app/lib/currency";
 import { headers } from "next/headers";
@@ -12,6 +11,11 @@ const puppeteer = require('puppeteer');
 
 const prisma = new PrismaClient()
 
+async function GetByIdAsync(id: number): Promise<reservation | null> {
+  return prisma
+    .reservation
+    .findUnique({ where: { id: id } });
+}
 
 async function GetInvoiceNumberForYearAsync(year: number) {
   return prisma.invoice_number.findUnique({

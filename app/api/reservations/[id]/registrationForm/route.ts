@@ -1,11 +1,17 @@
 import { promises as fs } from 'fs';
-import { GetByIdAsync } from "@/app/api/reservations/route";
 import { InternalDate } from "@/app/lib/dateutils";
-import { headers } from "next/headers";
-import { checkTokenAsync } from "@/app/lib/utils";
+import { PrismaClient, reservation } from "@prisma/client";
 
 const Mustache = require('mustache');
 const puppeteer = require('puppeteer');
+
+const prisma = new PrismaClient()
+
+async function GetByIdAsync(id: number): Promise<reservation | null> {
+  return prisma
+    .reservation
+    .findUnique({ where: { id: id } });
+}
 
 export async function GET(
   request: Request,

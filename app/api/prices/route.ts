@@ -61,7 +61,7 @@ async function GetMaxIdAsync() {
   return agg._max.id;
 }
 
-export async function GetByIdAsync(id: number): Promise<price | null> {
+async function GetByIdAsync(id: number): Promise<price | null> {
   return prisma
     .price
     .findUnique({ where: { id: id } });
