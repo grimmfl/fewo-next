@@ -1,6 +1,7 @@
 import { type user, PrismaClient } from "@prisma/client";
 
-const crypto = require('crypto');
+import crypto from 'crypto';
+//const crypto = require('crypto');
 
 const prisma = new PrismaClient();
 
