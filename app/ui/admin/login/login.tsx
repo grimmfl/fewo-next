@@ -12,7 +12,7 @@ export default function Login({ onLogin }: { onLogin: () => void}) {
 
     setIsLoading(true);
 
-    fetch("/api/auth", {
+    fetch("/api/login", {
       method: "POST",
       body: JSON.stringify({
                              password: password
