@@ -4,12 +4,9 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 export async function POST(Request: Request) {
-  console.log("Hallo1");
   const { password }: { password: string } = await Request.json();
-  console.log("Hallo2");
 
   const users = await prisma.user.findMany({});
-  console.log("Hallo3");
 
   for (const user of users) {
     if (await bcrypt.compare(password, user.password)) {
@@ -27,7 +24,7 @@ export async function POST(Request: Request) {
 async function createUserAsync() {
   await prisma.user.create({
                              data: {
-                               id: 3,
+                               id: 2,
                                name: "Peter",
                                password: await encryptPassword("M0notones")
                              }

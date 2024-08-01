@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
 }
 
 model information {
-  id      Int     @id @unique(map: "sqlite_autoindex_information_1") @default(autoincrement())
+  id      Int     @id
   title   String?
   content String
   icon    String?
@@ -16,25 +16,25 @@ model information {
 }
 
 model invoice_number {
-  year   Int @id @unique(map: "sqlite_autoindex_invoice_number_1") @default(autoincrement())
+  year   Int @id
   number Int
 }
 
 model price {
-  id       Int     @id @unique(map: "sqlite_autoindex_price_1") @default(autoincrement())
+  id       Int     @id
   title    String
   subtitle String?
-  value    Float
+  value    Float   @db.Real
   priority Int
 }
 
 model reservation {
-  id                   Int     @id @unique(map: "sqlite_autoindex_reservation_1") @default(autoincrement())
+  id                   Int     @id
   name                 String
   date_from            String
   date_to              String
   count                Int?
-  price                Float?
+  price                Float?  @db.Real
   email                String?
   phone                String?
   nationality          String?
@@ -55,7 +55,7 @@ model reservation {
 }
 
 model user {
-  id       Int     @id @unique(map: "sqlite_autoindex_user_1") @default(autoincrement())
+  id       Int     @id
   name     String
   password String
   token    String?
