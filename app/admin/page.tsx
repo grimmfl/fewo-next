@@ -1,6 +1,5 @@
 import { information, price, PrismaClient, type reservation } from "@prisma/client";
 import AdminDashboard from "@/app/ui/admin/dashboard/dashboard";
-import Login from "@/app/admin/login/page";
 
 const prisma = new PrismaClient();
 
