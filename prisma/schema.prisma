@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model information {
+  id      Int     @id @unique(map: "sqlite_autoindex_information_1") @default(autoincrement())
+  title   String?
+  content String
+  icon    String?
+  hide    Int
+}
+
+model invoice_number {
+  year   Int @id @unique(map: "sqlite_autoindex_invoice_number_1") @default(autoincrement())
+  number Int
+}
+
+model price {
+  id       Int     @id @unique(map: "sqlite_autoindex_price_1") @default(autoincrement())
+  title    String
+  subtitle String?
+  value    Float
+  priority Int
+}
+
+model reservation {
+  id                   Int     @id @unique(map: "sqlite_autoindex_reservation_1") @default(autoincrement())
+  name                 String
+  date_from            String
+  date_to              String
+  count                Int?
+  price                Float?
+  email                String?
+  phone                String?
+  nationality          String?
+  street               String?
+  house_number         String?
+  postal_code          String?
+  city                 String?
+  country              String?
+  is_same_as_normal    Int
+  billing_street       String?
+  billing_house_number String?
+  billing_postal_code  String?
+  billing_city         String?
+  billing_country      String?
+  company_name         String?
+  invoice_type         Int
+  invoice_number       String?
+}
+
+model user {
+  id       Int     @id @unique(map: "sqlite_autoindex_user_1") @default(autoincrement())
+  name     String
+  password String
+  token    String?
+}

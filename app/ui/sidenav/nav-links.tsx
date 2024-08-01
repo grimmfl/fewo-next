@@ -7,7 +7,7 @@ import {
   PhotoIcon,
   CurrencyEuroIcon,
   UserCircleIcon,
-  DocumentMagnifyingGlassIcon
+  DocumentMagnifyingGlassIcon, LockClosedIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import clsx from 'clsx';
@@ -23,6 +23,7 @@ const links = [
   { name: 'Preise', href: '/prices', icon: CurrencyEuroIcon },
   { name: 'Kontakt', href: '/contact', icon: UserCircleIcon },
   { name: 'Impressum', href: '/legal', icon: DocumentMagnifyingGlassIcon },
+  { name: 'Admin', href: '/admin', icon: LockClosedIcon },
 ];
 
 export default function NavLinks() {

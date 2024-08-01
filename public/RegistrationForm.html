@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RegistrationForm</title>
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        .headline {
+            margin-bottom: 0;
+        }
+
+        .ml-0 {
+            margin-left: 0 !important;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem !important;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem !important;
+        }
+
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem !important;
+        }
+
+        .mt-5 {
+            margin-top: 3rem !important;
+        }
+
+        .ml-1 {
+            margin-left: 0.25rem !important;
+        }
+
+        .ml-2 {
+            margin-left: 0.5rem !important;
+        }
+
+        .ml-3 {
+            margin-left: 1rem !important;
+        }
+
+        .ml-4 {
+            margin-left: 1.5rem !important;
+        }
+
+        .ml-5 {
+            margin-left: 3rem !important;
+        }
+
+        .ml-0 {
+            margin-right: 0 !important;
+        }
+
+        .mr-1 {
+            margin-right: 0.25rem !important;
+        }
+
+        .mr-2 {
+            margin-right: 0.5rem !important;
+        }
+
+        .mr-3 {
+            margin-right: 1rem !important;
+        }
+
+        .mr-4 {
+            margin-right: 1.5rem !important;
+        }
+
+        .mr-5 {
+            margin-right: 3rem !important;
+        }
+
+        .m-3 {
+            margin: 1rem !important;
+        }
+
+        .m-4 {
+            margin: 1.5rem !important;
+        }
+
+        .m-5 {
+            margin: 3rem !important;
+        }
+
+        .text-align-right {
+            text-align: right;
+        }
+
+        .text-align-left {
+            text-align: left;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+        }
+
+        .grid-2-col-1 {
+            grid-column: 1
+        }
+
+        .grid-2-col-2 {
+            grid-column: 2
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+        }
+
+        .grid-4-col-1 {
+            grid-column: 1
+        }
+
+        .grid-4-col-2 {
+            grid-column: 2
+        }
+
+        .grid-4-col-3 {
+            grid-column: 3
+        }
+
+        .grid-4-col-4 {
+            grid-column: 4
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="m-5">
+    <div class="grid-2">
+        <div class="grid-2-col-1">
+            <strong>Meldeschein / registration form</strong>
+        </div>
+        <div class="grid-2-col-2 text-align-right">
+            Ferienwohnung Grimm<br>Mühlstraße 4<br>63579 Freigericht
+        </div>
+    </div>
+    <div class="mt-5">
+        <strong>Privatanschrift / home address</strong>
+    </div>
+    <table class="mt-3 w-100">
+        <tbody>
+        <tr>
+            <td>Datum Anreise / date of arrival</td>
+            <td>{{ DateFrom }}</td>
+        </tr>
+        <tr>
+            <td>Datum Abreise / date of departure</td>
+            <td>{{ DateTo }}</td>
+        </tr>
+        <tr>
+            <td>Name / name</td>
+            <td>{{ Name }}</td>
+        </tr>
+        <tr>
+            <td>Straße, Nr. / street</td>
+            <td>{{ Street }} {{ HouseNumber }}</td>
+        </tr>
+        <tr>
+            <td>PLZ, Ort / postal code, city</td>
+            <td>{{ PostalCode }} {{ City }}</td>
+        </tr>
+        <tr>
+            <td>Land / country</td>
+            <td>{{ Country }}</td>
+        </tr>
+        <tr>
+            <td>Staatsangehörigkeit / nationality</td>
+            <td>{{ Nationality }}</td>
+        </tr>
+        <tr>
+            <td>Passnummer / passport number</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Geburtsdatum / date of birth</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Anzahl der Mitreisenden / number of accompanying persons</td>
+            <td>{{ Count }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-5 w-100">
+        <label for="signature">Unterschrift des Gastes / signature</label>
+        <input id="signature" class="w-100 mt-2" style="height: 50px">
+    </div>
+
+    <table class="mt-5 w-100">
+        <thead>
+        <tr>
+            <td><strong>Rechnungsanschrift / billing address</strong></td>
+            <td>
+                <strong>Die Privatanschrift stimmt mit der Rechnungsanschrift überein. /</strong>
+                {{ IsSameAsNormal}}<br>
+                <strong>The home address matches the billing address.</strong>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Firma / company</td>
+            <td>{{ CompanyName }}</td>
+        </tr>
+        <tr>
+            <td>Firmenadresse / company address</td>
+            <td>{{ CompanyAddress }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

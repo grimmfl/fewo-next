@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        .headline {
+            margin-bottom: 0;
+        }
+
+        .ml-0 {
+            margin-left: 0 !important;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem !important;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem !important;
+        }
+
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem !important;
+        }
+
+        .mt-5 {
+            margin-top: 3rem !important;
+        }
+
+        .ml-1 {
+            margin-left: 0.25rem !important;
+        }
+
+        .ml-2 {
+            margin-left: 0.5rem !important;
+        }
+
+        .ml-3 {
+            margin-left: 1rem !important;
+        }
+
+        .ml-4 {
+            margin-left: 1.5rem !important;
+        }
+
+        .ml-5 {
+            margin-left: 3rem !important;
+        }
+
+        .ml-0 {
+            margin-right: 0 !important;
+        }
+
+        .mr-1 {
+            margin-right: 0.25rem !important;
+        }
+
+        .mr-2 {
+            margin-right: 0.5rem !important;
+        }
+
+        .mr-3 {
+            margin-right: 1rem !important;
+        }
+
+        .mr-4 {
+            margin-right: 1.5rem !important;
+        }
+
+        .mr-5 {
+            margin-right: 3rem !important;
+        }
+
+        .m-3 {
+            margin: 1rem !important;
+        }
+
+        .m-4 {
+            margin: 1.5rem !important;
+        }
+
+        .m-5 {
+            margin: 3rem !important;
+        }
+
+        .text-align-right {
+            text-align: right;
+        }
+
+        .text-align-left {
+            text-align: left;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            grid-auto-rows: minmax(100px, auto);
+        }
+
+        .grid-2-col-1 {
+            grid-column: 1
+        }
+
+        .grid-2-col-2 {
+            grid-column: 2
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            grid-auto-rows: minmax(100px, auto);
+        }
+
+        .grid-4-col-1 {
+            grid-column: 1
+        }
+
+        .grid-4-col-2 {
+            grid-column: 2
+        }
+
+        .grid-4-col-3 {
+            grid-column: 3
+        }
+
+        .grid-4-col-4 {
+            grid-column: 4
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="m-5">
+    <div class="grid-2">
+        <div class="grid-2-col-1">
+            <h3 class="headline">Ferienwohnung Grimm</h3>
+            <div class="mt-1">Ferienwohnung - Monteurwohnung</div>
+        </div>
+        <div class="text-align-right grid-2-col-2">
+            <strong>Ferienwohnung Grimm</strong>
+            <div>Elke und Peter Grimm</div>
+            <div>Mühlstraße 4</div>
+            <div>63579 Freigericht</div>
+            <div>+49 6055-6302</div>
+            <div>info@fewogrimm.de</div>
+            <div>www.fewogrimm.de</div>
+        </div>
+    </div>
+    <div class="mt-2">
+        <strong>Rechnungsadresse</strong>
+        <div class="mt-2">{{ BillingName }}</div>
+        <div>{{ BillingStreet }} {{ BillingHouseNumber }}</div>
+        <div>{{ BillingCity }} {{ Billing Postalcode }}</div>
+        <div>{{ BillingCountry }}</div>
+    </div>
+    <div>
+        <h3 class="headline mt-5">Rechnung</h3>
+        <div class="grid-4 mt-3">
+            <div class="grid-4-col-1">
+                <strong>Rechnungsnummer</strong><br>
+                <strong>Anreise</strong><br>
+                <strong>Gastname</strong>
+            </div>
+            <div class="grid-4-col-2">
+                {{ InvoiceNumber }}<br>
+                {{ DateFrom }}<br>
+                {{ Name }}
+            </div>
+            <div class="grid-4-col-3">
+                <strong>Datum</strong><br>
+                <strong>Abreise</strong><br>
+                <strong>Personenzahl</strong>
+            </div>
+            <div class="col-4-col-4">
+                {{ DateValue }}<br>
+                {{ DateTo }}<br>
+                {{ Count }}
+            </div>
+        </div>
+        <div class="mt-3">
+            <table class="table w-100">
+                <thead>
+                <tr class="text-align-left">
+                    <th>Anzahl</th>
+                    <th>Beschreibung</th>
+                    <th>Preis</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ CountString }}</td>
+                    <td>Ferienwohnung - Gartenstraße 17<br>2,5 Zimmer, Küche, Bad</td>
+                    <td>{{ PriceString }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-5">
+            Kein Ausweis der Umsatzsteuer aufgrund der Anwendung der Kleinunternehmerregelung (§ 19 UStG).
+        </div>
+        <div class="mt-4">
+            Wir danken recht herzlich für ihren Besuch und wünschen Ihnen eine angenehme Heimreise
+        </div>
+    </div>
+</div>
+</body>
+</html>
