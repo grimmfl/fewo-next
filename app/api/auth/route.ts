@@ -1,24 +1,24 @@
-import { type user, PrismaClient } from "@prisma/client";
-
-import crypto from 'crypto';
-//const crypto = require('crypto');
+import { PrismaClient, type user } from "@prisma/client";
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 export async function POST(Request: Request) {
   const { password }: { password: string } = await Request.json();
 
-  const encrypted = encryptPassword(password);
+  const users = await prisma.user.findMany();
 
-  const user = await prisma.user.findFirst({
-                                             where: { password: encrypted }
-                                           });
+  for (const user of users) {
+    if (await bcrypt.compare(password, user.password)) {
+      const token = await generateTokenAsync(user);
 
-  if (user == null) return Response.json(false);
+      return Response.json(token);
+    }
+  }
 
-  const token = await generateTokenAsync(user);
+  return Response.json(false);
 
-  return Response.json(token);
+
 }
 
 async function createUserAsync() {
@@ -26,7 +26,7 @@ async function createUserAsync() {
                              data: {
                                id: 3,
                                name: "Peter",
-                               password: encryptPassword("M0notones")
+                               password: await encryptPassword("M0notones")
                              }
                            })
 }
@@ -36,7 +36,7 @@ async function generateTokenAsync(user: user) {
   expire.setUTCHours(expire.getHours() + 1);
   const expireStamp = expire.getTime();
 
-  const token = `${ encryptPassword(user.password) }:${ expireStamp }`
+  const token = `${ await encryptPassword(user.password) }:${ expireStamp }`
 
   await prisma.user.update({
                        where: {
@@ -53,10 +53,6 @@ async function generateTokenAsync(user: user) {
   return token;
 }
 
-function encryptPassword(password: string) {
-  const hash = crypto.createHash("sha512");
-
-  const data = hash.update(password);
-
-  return data.digest("hex");
+async function encryptPassword(password: string) {
+  return await bcrypt.hash(password, 10);
 }
