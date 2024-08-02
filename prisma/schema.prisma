@@ -52,6 +52,8 @@ model reservation {
   company_name         String?
   invoice_type         Int
   invoice_number       String?
+  note                 String?
+  date_invoice         String?
 }
 
 model user {

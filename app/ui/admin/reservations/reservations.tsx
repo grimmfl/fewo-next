@@ -23,6 +23,7 @@ const currentYear = new Date().getFullYear();
 
 type ReservationForm = {
   formName: { value: string },
+  formNote: { value: string},
   formCount: { value: string },
   formPrice: { value: string },
   formEmail: { value: string },
@@ -47,6 +48,7 @@ type ReservationForm = {
 function getEmptyState(): ReservationForm {
   return {
     formName: { value: "" },
+    formNote: { value: "" },
     formCount: { value: "" },
     formPrice: { value: "" },
     formEmail: { value: "" },
@@ -71,6 +73,7 @@ function getEmptyState(): ReservationForm {
 
 function fillState(state: ReservationForm, reservation: reservation) {
   state.formName.value = reservation.name;
+  state.formNote.value = reservation.note;
   state.formCount.value = (reservation.count ?? 0).toString();
   state.formPrice.value = (reservation.price ?? 0).toString();
   state.formEmail.value = reservation.email ?? "";
@@ -103,6 +106,7 @@ function GetReservation(
     date_from: dateFrom.toString(),
     date_to: dateTo.toString(),
     name: form.formName.value,
+    note: form.formNote.value,
     count: form.formCount.value == "" ? null : parseInt(form.formCount.value, 10),
     price: form.formPrice.value == "" ? null : parseFloat(form.formPrice.value),
     email: ValueOrNull(form.formEmail.value),
@@ -122,6 +126,7 @@ function GetReservation(
     billing_city: ValueOrNull(form.formInvoiceCity.value),
     billing_country: ValueOrNull(form.formInvoiceCountry.value),
     company_name: ValueOrNull(form.formCompany.value),
+    invoice_date: null
   };
 }
 
@@ -334,7 +339,13 @@ export default function Reservations({ reservations }: { reservations: reservati
               .map(r =>
                      <tr key={ r.id } onClick={ () => reservationClickHandler(r.id) }
                          className="border-b border-gray-300 hover:cursor-pointer h-10">
-                       <td className="py-3">{ r.name }</td>
+                       <td className="py-3"><b>{ r.name }</b>
+                         <div className={ clsx({
+                           "hidden": r.note == null || r.note === ""
+                                               })}>
+                           <br/>{r.note}
+                         </div>
+                       </td>
                        <td className="w-24">{ InternalDate.fromString(r.date_from)
                                                           .toPrettyString() }</td>
                        <td className="w-24">{ InternalDate.fromString(r.date_to)
@@ -399,6 +410,9 @@ export default function Reservations({ reservations }: { reservations: reservati
         ) } onSubmit={ submitForm } onReset={ () => reservationClickHandler(reservationId) }>
           <FormControl name="formName" type={ FormControlType.Text } state={ formState }
                        label="Name" setState={ setFormState } required/>
+
+          <FormControl name="formNote" type={ FormControlType.TextArea } state={ formState }
+                       label="Notiz" setState={ setFormState } required/>
 
           <div className="mt-4">
             <label htmlFor="formDates"

@@ -134,7 +134,7 @@ export async function GET(
     InvoiceNumber: invoiceNumber,
     DateFrom: dateFrom.toPrettyString(),
     Name: reservation.name,
-    DateValue: InternalDate.now().toPrettyString(),
+    DateValue: dateFrom.toPrettyString(),
     DateTo: dateTo.toPrettyString(),
     Count: reservation.count == null ? "" : reservation.count.toString(),
     CountString: countString,
