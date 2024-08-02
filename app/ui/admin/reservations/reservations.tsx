@@ -160,6 +160,7 @@ export default function Reservations({ reservations }: { reservations: reservati
     const res = GetReservation(reservationId, formState, dateFromInternal!, dateToInternal!);
 
     fetch("/api/reservations", {
+      cache: "no-store",
       method: "POST",
       body: JSON.stringify(res),
       headers: {
@@ -192,6 +193,7 @@ export default function Reservations({ reservations }: { reservations: reservati
   function generateInvoice(id: number) {
     setIsInvoiceLoading(true);
     fetch(`/api/reservations/${ id }/invoice`, {
+      cache: "no-store",
       method: "GET",
       headers: {
         token: getLocalStorage("token") ?? ""
@@ -214,6 +216,7 @@ export default function Reservations({ reservations }: { reservations: reservati
   function generateRegistrationForm(id: number) {
     setIsRegistrationFormLoading(true);
     fetch(`/api/reservations/${ id }/registrationForm`, {
+      cache: "no-store",
       method: "GET",
       headers: {
         token: getLocalStorage("token") ?? ""
@@ -238,6 +241,7 @@ export default function Reservations({ reservations }: { reservations: reservati
   function deleteRegistration(id: number) {
     setIsDeleteLoading(true);
     fetch(`/api/reservations/${ id }`, {
+      cache: "no-store",
       method: "DELETE",
       headers: {
         token: getLocalStorage("token") ?? ""

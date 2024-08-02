@@ -13,6 +13,7 @@ export default function Login({ onLogin }: { onLogin: () => void}) {
     setIsLoading(true);
 
     fetch("/api/login", {
+      cache: "no-store",
       method: "POST",
       body: JSON.stringify({
                              password: password

@@ -70,6 +70,7 @@ export default function Prices({ prices }: { prices: price[] }) {
     const price = GetPrice(priceId, formState);
 
     fetch("/api/prices", {
+      cache: "no-store",
       method: "POST",
       body: JSON.stringify(price),
       headers: {
@@ -100,6 +101,7 @@ export default function Prices({ prices }: { prices: price[] }) {
   function deletePrice(id: number) {
     setIsDeleteLoading(true);
     fetch(`/api/prices/${ id }`, {
+      cache: "no-store",
       method: "DELETE",
       headers: {
         token: getLocalStorage("token") ?? ""
@@ -149,6 +151,7 @@ export default function Prices({ prices }: { prices: price[] }) {
       .map((p, i) => ({ ...p, priority: i + 1 }));
 
     fetch("/api/prices", {
+      cache: "no-store",
       method: "PUT",
       body: JSON.stringify(normalized),
       headers: {

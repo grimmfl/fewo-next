@@ -63,6 +63,7 @@ export default function Informations({ informations }: { informations: informati
     const information = GetInformation(informationId, formState);
 
     fetch("/api/informations", {
+      cache: "no-store",
       method: "POST",
       body: JSON.stringify(information),
       headers: {
@@ -93,6 +94,7 @@ export default function Informations({ informations }: { informations: informati
   function deletePrice(id: number) {
     setIsDeleteLoading(true);
     fetch(`/api/informations/${ id }`, {
+      cache: "no-store",
       method: "DELETE",
       headers: {
         token: getLocalStorage("token") ?? ""
