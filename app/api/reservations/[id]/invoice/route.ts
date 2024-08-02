@@ -5,6 +5,7 @@ import { InternalDate } from "@/app/lib/dateutils";
 import { currency } from "@/app/lib/currency";
 import { headers } from "next/headers";
 import { checkTokenAsync } from "@/app/lib/utils";
+import path from "node:path";
 
 const Mustache = require('mustache');
 const puppeteer = require('puppeteer');
@@ -113,7 +114,8 @@ export async function GET(
 
   const staticLoc = process.env.NODE_ENV === 'production' ? 'static' : 'public';
 
-  const template = await fs.readFile(process.cwd() + `/${staticLoc}/Invoice.html`, "utf-8");
+  const file = path.join(path.resolve("./public", "Invoice.html"));
+  const template = await fs.readFile(file, "utf-8");
 
   const dateFrom = InternalDate.fromString(reservation.date_from);
   const dateTo = InternalDate.fromString(reservation.date_to);
