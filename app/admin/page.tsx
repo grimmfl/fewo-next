@@ -3,6 +3,8 @@ import AdminDashboard from "@/app/ui/admin/dashboard/dashboard";
 
 export const dynamic = 'force-dynamic';
 
+export const revalidate = 0;
+
 const prisma = new PrismaClient();
 
 async function GetReservationsAsync(): Promise<reservation[]> {
