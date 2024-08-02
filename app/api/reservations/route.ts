@@ -3,6 +3,8 @@ import type { reservation } from "@prisma/client";
 import { headers } from "next/headers";
 import { checkTokenAsync } from "@/app/lib/utils";
 
+export const dynamic = 'force-dynamic';
+
 const prisma = new PrismaClient()
 
 async function CreateAsync(input: reservation): Promise<reservation> {
@@ -53,7 +55,6 @@ async function GetByIdAsync(id: number): Promise<reservation | null> {
     .findUnique({ where: { id: id } });
 }
 
-export const dynamic = 'force-dynamic' // defaults to auto
 export async function POST(request: Request) {
   const headersList = headers();
   const token = headersList.get('Token');

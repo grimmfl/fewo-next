@@ -2,6 +2,8 @@ import { price, PrismaClient, type reservation } from "@prisma/client";
 import { headers } from "next/headers";
 import { checkTokenAsync } from "@/app/lib/utils";
 
+export const dynamic = 'force-dynamic'
+
 const prisma = new PrismaClient()
 
 const doNothing = {

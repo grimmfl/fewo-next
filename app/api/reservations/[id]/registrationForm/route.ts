@@ -5,6 +5,8 @@ import { PrismaClient, reservation } from "@prisma/client";
 const Mustache = require('mustache');
 const puppeteer = require('puppeteer');
 
+export const dynamic = 'force-dynamic';
+
 const prisma = new PrismaClient()
 
 async function GetByIdAsync(id: number): Promise<reservation | null> {
