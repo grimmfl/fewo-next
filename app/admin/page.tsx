@@ -1,6 +1,8 @@
 import { information, price, PrismaClient, type reservation } from "@prisma/client";
 import AdminDashboard from "@/app/ui/admin/dashboard/dashboard";
 
+export const dynamic = 'force-dynamic';
+
 const prisma = new PrismaClient();
 
 async function GetReservationsAsync(): Promise<reservation[]> {
