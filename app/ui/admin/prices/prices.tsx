@@ -92,8 +92,9 @@ export default function Prices({ prices }: { prices: price[] }) {
             progress: undefined,
             theme: "light",
             closeOnClick: true,
-            pauseOnHover: false
+            pauseOnHover: false,
           });
+          setPriceId(-1);
         }
       });
   }

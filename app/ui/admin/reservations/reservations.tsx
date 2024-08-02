@@ -186,6 +186,7 @@ export default function Reservations({ reservations }: { reservations: reservati
           closeOnClick: true,
           pauseOnHover: false
         });
+        setReservationId(-1);
       }
     });
   }

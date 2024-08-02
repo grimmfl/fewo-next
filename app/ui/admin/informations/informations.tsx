@@ -120,6 +120,8 @@ export default function Informations({ informations }: { informations: informati
             closeOnClick: true,
             pauseOnHover: false
           });
+
+          setInformationId(-1);
         }
     });
   }
