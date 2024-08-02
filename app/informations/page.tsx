@@ -8,6 +8,9 @@ import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
 import type { information } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const prisma = new PrismaClient();
 
 

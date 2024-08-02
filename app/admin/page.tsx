@@ -2,7 +2,6 @@ import { information, price, PrismaClient, type reservation } from "@prisma/clie
 import AdminDashboard from "@/app/ui/admin/dashboard/dashboard";
 
 export const dynamic = 'force-dynamic';
-
 export const revalidate = 0;
 
 const prisma = new PrismaClient();

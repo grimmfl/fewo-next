@@ -3,6 +3,9 @@ import Calendar from "@/app/ui/calendar/calendar";
 import { PrismaClient, Prisma } from '@prisma/client'
 import type { reservation } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const prisma = new PrismaClient()
 
 async function GetReservationsAsync(): Promise<reservation[]> {

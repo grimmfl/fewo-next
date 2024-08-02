@@ -2,6 +2,9 @@ import { PrismaClient, Prisma } from '@prisma/client'
 import { currency } from "@/app/lib/currency";
 import type {price} from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const prisma = new PrismaClient()
 
 async function GetAllPricesAsync(): Promise<price[]> {
