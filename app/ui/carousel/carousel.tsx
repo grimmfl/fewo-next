@@ -39,7 +39,7 @@ export default function Carousel() {
   return (
     <>
       <div className="relative w-carousel h-carousel">
-        <Image src={ image.url } alt="" fill={ true }></Image>
+        <Image className="object-scale-down" src={ image.url } alt="" fill={ true }></Image>
 
         <div className="relative text-center top-28 mx-2 flex justify-between">
           <button onClick={ selectPrev }><ChevronLeftIcon
