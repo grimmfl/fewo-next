@@ -111,7 +111,9 @@ export async function GET(
 
   if (reservation.invoice_type === 0) return Response.json(false);
 
-  const template = await fs.readFile(process.cwd() + '/public/Invoice.html', "utf-8");
+  const staticLoc = process.env.NODE_ENV === 'production' ? 'static' : 'public';
+
+  const template = await fs.readFile(process.cwd() + `/${staticLoc}/Invoice.html`, "utf-8");
 
   const dateFrom = InternalDate.fromString(reservation.date_from);
   const dateTo = InternalDate.fromString(reservation.date_to);
@@ -147,7 +149,7 @@ export async function GET(
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setContent(rendered);
-  await page.pdf({ path: process.cwd() + "/public/Invoice.pdf", format: 'A4' });
+  await page.pdf({ path: process.cwd() + `/${staticLoc}/Invoice.pdf`, format: 'A4' });
   await browser.close();
 
   return Response.json(true);

@@ -1,5 +1,5 @@
 import { InternalDate, years } from "@/app/lib/dateutils";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import type { reservation } from "@prisma/client";
 import { getLocalStorage, mapInvoiceType, ValueOrNull } from "@/app/lib/utils";
 import { currency } from "@/app/lib/currency";
@@ -412,7 +412,7 @@ export default function Reservations({ reservations }: { reservations: reservati
                        label="Name" setState={ setFormState } required/>
 
           <FormControl name="formNote" type={ FormControlType.TextArea } state={ formState }
-                       label="Notiz" setState={ setFormState } required/>
+                       label="Notiz" setState={ setFormState }/>
 
           <div className="mt-4">
             <label htmlFor="formDates"
