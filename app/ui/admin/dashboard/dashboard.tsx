@@ -8,7 +8,6 @@ import Reservations from "@/app/ui/admin/reservations/reservations";
 import Prices from "@/app/ui/admin/prices/prices";
 import Informations from "@/app/ui/admin/informations/informations";
 import Login from "@/app/ui/admin/login/login";
-import LoadingButton from "@/app/ui/loading/loadingButton";
 import { getLocalStorage, removeLocalStorage } from "@/app/lib/utils";
 
 const prisma = new PrismaClient();
@@ -35,7 +34,9 @@ export default function AdminDashboard({ reservations, prices, informations }: {
   informations: information[]
 }) {
   function logout() {
-    localStorage.removeItem("token");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+    }
     setIsLoggedIn(false);
   }
 
@@ -56,14 +57,13 @@ export default function AdminDashboard({ reservations, prices, informations }: {
 
   isExpired(token!);
 
-
   return (
     <div className="px-2 md:px-10">
       { isLoggedIn ?
         <div>
           <div className="text-right">
 
-            <button onClick={logout}
+            <button type="button" onClick={logout}
               className="border border-amber-500 py-2 rounded mb-2 w-52 hover:bg-amber-100">Abmelden
             </button>
 

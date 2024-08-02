@@ -73,7 +73,7 @@ function getEmptyState(): ReservationForm {
 
 function fillState(state: ReservationForm, reservation: reservation) {
   state.formName.value = reservation.name;
-  state.formNote.value = reservation.note;
+  state.formNote.value = reservation.note ?? "";
   state.formCount.value = (reservation.count ?? 0).toString();
   state.formPrice.value = (reservation.price ?? 0).toString();
   state.formEmail.value = reservation.email ?? "";
@@ -126,7 +126,7 @@ function GetReservation(
     billing_city: ValueOrNull(form.formInvoiceCity.value),
     billing_country: ValueOrNull(form.formInvoiceCountry.value),
     company_name: ValueOrNull(form.formCompany.value),
-    invoice_date: null
+    date_invoice: null
   };
 }
 
