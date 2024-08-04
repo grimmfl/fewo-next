@@ -150,7 +150,7 @@ export async function GET(
 
   const rendered = Mustache.render(template, data);
 
-  const target = path.join(path.resolve("./public", "Invoice.pdf"));
+  const target = path.join("/tmp", "Invoice.pdf");
 
   //const browser = await puppeteer.launch();
   //const page = await browser.newPage();
