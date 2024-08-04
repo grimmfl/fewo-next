@@ -6,6 +6,8 @@ import { currency } from "@/app/lib/currency";
 import { headers } from "next/headers";
 import { checkTokenAsync } from "@/app/lib/utils";
 import path from "node:path";
+import { MyDocument } from "@/app/lib/invoice";
+import ReactPDF from "@react-pdf/renderer";
 
 const Mustache = require('mustache');
 const puppeteer = require('puppeteer');
@@ -148,11 +150,15 @@ export async function GET(
 
   const rendered = Mustache.render(template, data);
 
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(rendered);
-  await page.pdf({ path: process.cwd() + `/${staticLoc}/Invoice.pdf`, format: 'A4' });
-  await browser.close();
+  const target = path.join(path.resolve("./public", "Invoice.pdf"));
+
+  //const browser = await puppeteer.launch();
+  //const page = await browser.newPage();
+  //await page.setContent(rendered);
+  //await page.pdf({ path: target, format: 'A4' });
+  //await browser.close();
+
+  await ReactPDF.render(MyDocument({ data }), target);
 
   return Response.json(true);
 }
