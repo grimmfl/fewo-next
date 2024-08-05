@@ -1,9 +1,9 @@
-import { promises as fs } from 'fs';
 import { InternalDate } from "@/app/lib/dateutils";
 import { PrismaClient, reservation } from "@prisma/client";
-
-const Mustache = require('mustache');
-const puppeteer = require('puppeteer');
+import { ErrorResponse, ErrorType } from "@/app/lib/errorResponse";
+import ReactPDF from "@react-pdf/renderer";
+import { put } from "@vercel/blob";
+import { RegistrationForm } from "@/app/lib/registrationForm";
 
 export const dynamic = 'force-dynamic';
 
@@ -22,9 +22,11 @@ export async function GET(
   const reservationId = parseInt(params.id, 10);
   const reservation = await GetByIdAsync(reservationId);
 
-  if (reservation == null) throw Error("reservation does not exist");
-
-  const template = await fs.readFile(process.cwd() + '/public/RegistrationForm.html', "utf-8");
+  if (reservation == null)
+    return Response.json(new ErrorResponse(
+      ErrorType.NotFound,
+      `Die Reservierung ${ reservationId } existiert nicht.`
+    ));
 
   const companyAddress = reservation.is_same_as_normal
     ? ""
@@ -40,18 +42,18 @@ export async function GET(
     PostalCode: reservation.postal_code ?? "",
     City: reservation.city ?? "",
     Country: reservation.country ?? "",
-    Count: reservation.count == null ? "" : (reservation.count - 1),
+    Count: reservation.count == null ? "" : (reservation.count - 1).toString(),
     CompanyName: reservation.is_same_as_normal ? "" : (reservation.company_name ?? ""),
     CompanyAddress: companyAddress,
+    Nationality: reservation.nationality ?? "",
+    IsSameAsNormal: reservation.is_same_as_normal === 1 ? "Ja" : "Nein"
   };
 
-  const rendered = Mustache.render(template, data);
+  const blob = await ReactPDF.pdf(RegistrationForm({ data })).toBlob();
 
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(rendered);
-  await page.pdf({ path: process.cwd() + "/public/RegistrationForm.pdf", format: 'A4' });
-  await browser.close();
+  const filename = `registrationForm_${ reservation.id }.pdf`;
 
-  return Response.json(true);
+  const result = await put(filename, blob, { access: "public" });
+
+  return Response.json(result);
 }

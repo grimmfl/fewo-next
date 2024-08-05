@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { headers } from "next/headers";
 import { checkTokenAsync } from "@/app/lib/utils";
+import { ErrorResponse, ErrorType } from "@/app/lib/errorResponse";
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,11 @@ export async function DELETE(
   const headersList = headers();
   const token = headersList.get('Token');
 
-  if (!(await checkTokenAsync(token, prisma))) return Response.json(false);
+  if (!(await checkTokenAsync(token, prisma)))
+    return Response.json(new ErrorResponse(
+      ErrorType.Unauthorized,
+      `"Nicht authentifiziert. Wahrscheinlich ist die Sitzung abgelaufen."`
+    ));
 
   const reservationId = parseInt(params.id, 10);
 

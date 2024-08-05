@@ -1,16 +1,13 @@
-import { promises as fs } from 'fs';
-import { PrismaClient, Prisma } from '@prisma/client'
 import type { reservation } from "@prisma/client";
+import { PrismaClient } from '@prisma/client'
 import { InternalDate } from "@/app/lib/dateutils";
 import { currency } from "@/app/lib/currency";
 import { headers } from "next/headers";
 import { checkTokenAsync } from "@/app/lib/utils";
-import path from "node:path";
 import { MyDocument } from "@/app/lib/invoice";
 import ReactPDF from "@react-pdf/renderer";
-
-const Mustache = require('mustache');
-const puppeteer = require('puppeteer');
+import { put } from "@vercel/blob";
+import { ErrorResponse, ErrorType } from "@/app/lib/errorResponse";
 
 export const dynamic = 'force-dynamic';
 
@@ -39,43 +36,43 @@ async function AddInvoiceNumberYearAsync(year: number) {
 
 async function SetInvoiceNumberAsync(year: number, number: number) {
   await prisma.invoice_number.update({
-                                 where: { year: year },
-                                 data: {
-                                   year: year,
-                                   number: number
-                                 }
-                               });
+                                       where: { year: year },
+                                       data: {
+                                         year: year,
+                                         number: number
+                                       }
+                                     });
 }
 
 async function SetInvoiceNumberOnReservationAsync(number: string, reservation: reservation) {
   await prisma.reservation.update({
-                              where: { id: reservation.id },
-                              data: {
-                                invoice_number: number,
-                                id: undefined,
-                                date_from: undefined,
-                                date_to: undefined,
-                                name: undefined,
-                                count: undefined,
-                                price: undefined,
-                                email: undefined,
-                                phone: undefined,
-                                nationality: undefined,
-                                street: undefined,
-                                house_number: undefined,
-                                postal_code: undefined,
-                                city: undefined,
-                                country: undefined,
-                                invoice_type: undefined,
-                                is_same_as_normal: undefined,
-                                billing_street: undefined,
-                                billing_house_number: undefined,
-                                billing_postal_code: undefined,
-                                billing_city: undefined,
-                                billing_country: undefined,
-                                company_name: undefined,
-                              }
-                            });
+                                    where: { id: reservation.id },
+                                    data: {
+                                      invoice_number: number,
+                                      id: undefined,
+                                      date_from: undefined,
+                                      date_to: undefined,
+                                      name: undefined,
+                                      count: undefined,
+                                      price: undefined,
+                                      email: undefined,
+                                      phone: undefined,
+                                      nationality: undefined,
+                                      street: undefined,
+                                      house_number: undefined,
+                                      postal_code: undefined,
+                                      city: undefined,
+                                      country: undefined,
+                                      invoice_type: undefined,
+                                      is_same_as_normal: undefined,
+                                      billing_street: undefined,
+                                      billing_house_number: undefined,
+                                      billing_postal_code: undefined,
+                                      billing_city: undefined,
+                                      billing_country: undefined,
+                                      company_name: undefined,
+                                    }
+                                  });
 }
 
 async function GenerateInvoiceNumberAsync(reservation: reservation) {
@@ -105,19 +102,27 @@ export async function GET(
   const headersList = headers();
   const token = headersList.get('Token');
 
-  if (!(await checkTokenAsync(token, prisma))) return Response.json(false);
+  if (!(await checkTokenAsync(token, prisma)))
+    return Response.json(new ErrorResponse(
+      ErrorType.Unauthorized,
+      `"Nicht authentifiziert. Wahrscheinlich ist die Sitzung abgelaufen."`
+    ));
 
   const reservationId = parseInt(params.id, 10);
   const reservation = await GetByIdAsync(reservationId);
 
-  if (reservation == null) throw Error("reservation does not exist");
+  if (reservation == null)
+    return Response.json(new ErrorResponse(
+      ErrorType.NotFound,
+      `Die Reservierung ${ reservationId } existiert nicht.`
+    ));
 
-  if (reservation.invoice_type === 0) return Response.json(false);
 
-  const staticLoc = process.env.NODE_ENV === 'production' ? 'static' : 'public';
-
-  const file = path.join(path.resolve("./public", "Invoice.html"));
-  const template = await fs.readFile(file, "utf-8");
+  if (reservation.invoice_type === 0)
+    return Response.json(new ErrorResponse(
+      ErrorType.BadRequest,
+      "Für Reservierungen für diesen Typ werden keine Rechnungen erzeugt."
+    ));
 
   const dateFrom = InternalDate.fromString(reservation.date_from);
   const dateTo = InternalDate.fromString(reservation.date_to);
@@ -147,18 +152,11 @@ export async function GET(
     PriceString: currency(reservation.price ?? 0),
   };
 
+  const blob = await ReactPDF.pdf(MyDocument({ data })).toBlob();
 
-  const rendered = Mustache.render(template, data);
+  const filename = `invoice_${ reservation.invoice_number }.pdf`;
 
-  const target = path.join("/tmp", "Invoice.pdf");
+  const result = await put(filename, blob, { access: "public" });
 
-  //const browser = await puppeteer.launch();
-  //const page = await browser.newPage();
-  //await page.setContent(rendered);
-  //await page.pdf({ path: target, format: 'A4' });
-  //await browser.close();
-
-  await ReactPDF.render(MyDocument({ data }), target);
-
-  return Response.json(true);
+  return Response.json(result);
 }

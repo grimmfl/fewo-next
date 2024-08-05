@@ -18,12 +18,14 @@ import {
 import LoadingButton from "@/app/ui/loading/loadingButton";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PutBlobResult } from "@vercel/blob";
+import { ErrorResponse, handleErrors } from "@/app/lib/errorResponse";
 
 const currentYear = new Date().getFullYear();
 
 type ReservationForm = {
   formName: { value: string },
-  formNote: { value: string},
+  formNote: { value: string },
   formCount: { value: string },
   formPrice: { value: string },
   formEmail: { value: string },
@@ -172,16 +174,10 @@ export default function Reservations({ reservations }: { reservations: reservati
         "Token": getLocalStorage("token") ?? ""
       }
     })
-    .then(r => r.json())
-    .then(r => {
-      if (!r) toast.error("Nicht authentifiziert. Wahrscheinlich ist die Sitzung abgelaufen.", {
-        position: "top-center",
-        progress: undefined,
-        theme: "light",
-        closeOnClick: true,
-        pauseOnHover: false
-      });
-      else {
+      .then(r => r.json())
+      .then(r => {
+        if (!handleErrors(r)) return;
+
         router.refresh();
         setIsSaveLoading(false);
         toast.success('Reservierung gespeichert!', {
@@ -192,8 +188,7 @@ export default function Reservations({ reservations }: { reservations: reservati
           pauseOnHover: false
         });
         setReservationId(-1);
-      }
-    });
+      });
   }
 
   function generateInvoice(id: number) {
@@ -207,14 +202,11 @@ export default function Reservations({ reservations }: { reservations: reservati
     })
       .then(r => r.json())
       .then(r => {
+        if (!handleErrors(r)) return;
+
         setIsInvoiceLoading(false);
 
-        if (!r) {
-          alert("Keine Rechnung für diesen Rechnungstyp.")
-          return;
-        }
-
-        window.open("/Invoice.pdf");
+        window.open(r.url);
         router.refresh();
       });
   }
@@ -227,11 +219,13 @@ export default function Reservations({ reservations }: { reservations: reservati
       headers: {
         token: getLocalStorage("token") ?? ""
       }
-    }).then(r => {
-      if (!r.json()) return;
-      window.open("/RegistrationForm.pdf");
-      setIsRegistrationFormLoading(false);
-    });
+    }).then(r => r.json())
+      .then(r => {
+        if (!handleErrors(r)) return;
+
+        window.open(r.url);
+        setIsRegistrationFormLoading(false);
+      });
   }
 
   function duplicate(id: number) {
@@ -254,26 +248,20 @@ export default function Reservations({ reservations }: { reservations: reservati
       }
     }).then(r => r.json())
       .then(r => {
-        if (!r) toast.error("Nicht authentifiziert. Wahrscheinlich ist die Sitzung abgelaufen.", {
+        if (!handleErrors(r)) return;
+
+        router.refresh();
+        setIsDeleteLoading(false);
+        setOpenPopover(-1);
+
+        toast.success('Reservierung gelöscht!', {
           position: "top-center",
           progress: undefined,
           theme: "light",
           closeOnClick: true,
           pauseOnHover: false
-        }); else {
-          router.refresh();
-          setIsDeleteLoading(false);
-          setOpenPopover(-1);
-
-          toast.success('Reservierung gelöscht!', {
-            position: "top-center",
-            progress: undefined,
-            theme: "light",
-            closeOnClick: true,
-            pauseOnHover: false
-          });
-        }
-    });
+        });
+      });
   }
 
   let router = useRouter();
@@ -341,9 +329,9 @@ export default function Reservations({ reservations }: { reservations: reservati
                          className="border-b border-gray-300 hover:cursor-pointer h-10">
                        <td className="py-3"><b>{ r.name }</b>
                          <div className={ clsx({
-                           "hidden": r.note == null || r.note === ""
-                                               })}>
-                           <br/>{r.note}
+                                                 "hidden": r.note == null || r.note === ""
+                                               }) }>
+                           <br/>{ r.note }
                          </div>
                        </td>
                        <td className="w-24">{ InternalDate.fromString(r.date_from)
@@ -430,7 +418,7 @@ export default function Reservations({ reservations }: { reservations: reservati
                          label="Anzahl" state={ formState } setState={ setFormState }></FormControl>
 
             <FormControl type={ FormControlType.Number } name="formPrice" label="Preis"
-                         state={ formState } step={0.01} setState={ setFormState }></FormControl>
+                         state={ formState } step={ 0.01 } setState={ setFormState }></FormControl>
           </div>
 
           <FormControl className="mt-4" type={ FormControlType.Text } name="formEmail" label="Email"
@@ -446,9 +434,10 @@ export default function Reservations({ reservations }: { reservations: reservati
             <FormControl className="mr-2" type={ FormControlType.Text } name="formStreet"
                          label="Straße" state={ formState } setState={ setFormState }/>
 
-            <FormControl inputClassName="w-20 bg-transparent block border-b border-b-gray-300 text-xs md:text-sm"
-                         type={ FormControlType.Text } name="formHouseNumber" label="Hausnummer"
-                         state={ formState } setState={ setFormState }/>
+            <FormControl
+              inputClassName="w-20 bg-transparent block border-b border-b-gray-300 text-xs md:text-sm"
+              type={ FormControlType.Text } name="formHouseNumber" label="Hausnummer"
+              state={ formState } setState={ setFormState }/>
           </div>
 
           <div className="flex mt-4">
@@ -488,10 +477,11 @@ export default function Reservations({ reservations }: { reservations: reservati
               <FormControl className="mr-2" type={ FormControlType.Text } name="formInvoiceStreet"
                            label="Straße" state={ formState } setState={ setFormState }/>
 
-              <FormControl inputClassName="w-20 bg-transparent block border-b border-b-gray-300 text-xs md:text-sm"
-                           type={ FormControlType.Text } name="formInvoiceHouseNumber"
-                           label="Hausnummer"
-                           state={ formState } setState={ setFormState }/>
+              <FormControl
+                inputClassName="w-20 bg-transparent block border-b border-b-gray-300 text-xs md:text-sm"
+                type={ FormControlType.Text } name="formInvoiceHouseNumber"
+                label="Hausnummer"
+                state={ formState } setState={ setFormState }/>
             </div>
             <div className="flex mt-4">
               <FormControl className="mr-2"
